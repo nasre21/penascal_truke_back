@@ -11,3 +11,8 @@ def create_app(database):
     
     init_db(database)
     
+    @app.route("/")
+    def home():
+        return 'Hello World!'
+    
+    

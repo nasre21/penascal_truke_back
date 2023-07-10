@@ -5,11 +5,11 @@
 import mysql.connector
 
 def connectdb():
-    host = "containers-us-west-200.railway.app"
+    host = "containers-us-west-2.railway.app"
     user = "root"
-    password = "DjBedbZ4tplK1ZzNd8Z6"
+    password = "Vpc9U35FL63X8CRJowuL"
     database = "railway"
-    port = 5834
+    port = 6140
     
     try:
         con = mysql.connector.connect(
