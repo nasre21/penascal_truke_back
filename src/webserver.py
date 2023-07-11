@@ -22,11 +22,9 @@ def create_app(database):
         else:
             return get_products()
     
-    @app.route("/category/<category>", methods=['POST'])
+    @app.route("/category/<category>")
     def categories(category):
-        category = request.get_json()
-        get_category(category)
-        return ""
+        return get_category(category)
     
     
     

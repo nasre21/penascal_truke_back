@@ -5,6 +5,7 @@ database_path = ""
 def init_db(database):
     global database_path
     database_path = database
+    
 
 def get_products():
     con = db.connectdb()
