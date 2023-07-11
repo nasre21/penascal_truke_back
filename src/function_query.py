@@ -1,5 +1,7 @@
 import src.database as db
 from flask import request
+import jwt
+
 
 database_path = ""
 
@@ -56,11 +58,37 @@ def get_users_data():
 
 
 
-def add_register():
+# def add_register(request, key):
+#     lastname = request.form['lastname']
+#     firstname = request.form['firstname']
+#     phone = request.form['phone']
+#     penascales = request.form['penascales']
+#     email = request.form['email']
+#     password = request.form['password']
+    
+#     payloads = {
+#         "contraseña": password
+#     }
+    
+#     # data = request.get_json()
+    
+#     con = db.connectdb()
+#     cursor = con.cursor()
+    
+#     password_encoded = jwt.encode(payloads, key, algorithm="HS256")
+   
+#     cursor.execute('INSERT INTO user (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password_encoded))
+    
+#     con.commit()
+#     con.close()
+#     print('user added successfully')
+    
+#     return "User created successfully"
+
+def add_register(data):
     con = db.connectdb()
     cursor = con.cursor()
-    data = request.get_json()
-    
+  
     lastname = data['lastname']
     firstname = data['firstname']
     phone = data['phone']
@@ -68,9 +96,13 @@ def add_register():
     email = data['email']
     password = data['password']
     
-    cursor.execute('INSERT INTO peliculas (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password))
+    data = request.get_json()
+      
+   
+    cursor.execute('INSERT INTO user (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password))
     
     con.commit()
     con.close()
     print('user added successfully')
     
+    return "User created successfully"

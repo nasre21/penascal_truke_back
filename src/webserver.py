@@ -4,6 +4,8 @@ from flask_cors import CORS
 
 from src.function_query import *
 
+
+
 def create_app(database):
     
     app = Flask(__name__)
@@ -11,7 +13,11 @@ def create_app(database):
     
     # initialising the database
     init_db(database)
-    
+    def secret_key():
+        app.secret_key = "secret"
+        return app.secret_key
+    key = secret_key()
+
     
     # example route to check that the connection is correct
     @app.route("/")
@@ -35,11 +41,15 @@ def create_app(database):
     def get_user():
         return get_users_data()
     
+    # @app.route("/register", methods=["POST"])
+    # def register():
+    #     app.secret_key = "secret"
+    #     return add_register(request, app.secret_key)
+    
     @app.route("/register", methods=["POST"])
     def register():
-        return register_add()
-    
-    
+        data = request.get_json()
+        return add_register(data)
     
     
     
