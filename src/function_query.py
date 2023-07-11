@@ -14,11 +14,11 @@ def init_db(database):
 def get_products():
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM product")
-    myproducts = cursor.fetchall()
+    cursor.execute("SELECT * FROM user")
+    myusers = cursor.fetchall()
     product_array = []
     product_col_Names = [column[0] for column in cursor.description]
-    for product in myproducts:
+    for product in myusers:
         product_array.append(dict(zip(product_col_Names, product)))
 
     cursor.close()
@@ -38,3 +38,19 @@ def get_category(category):
         product_array.append(dict(zip(product_col_Names, product)))
     cursor.close()
     return product_array
+
+# function to get all the users that are in the database for the administrator
+def get_users_data():
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM user")
+    myusers = cursor.fetchall()
+    product_array = []
+    product_col_Names = [column[0] for column in cursor.description]
+    for product in myusers:
+        product_array.append(dict(zip(product_col_Names, product)))
+
+    cursor.close()
+    return product_array
+
+

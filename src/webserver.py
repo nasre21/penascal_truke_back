@@ -31,6 +31,9 @@ def create_app(database):
     def categories(category):
         return get_category(category)
     
+    @app.route("/users")
+    def get_user():
+        return get_users_data()
     
     
     
