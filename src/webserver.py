@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 from flask_cors import CORS
 
@@ -14,6 +14,24 @@ def create_app(database):
     @app.route("/")
     def home():
         return 'Hello World!'
+    
+    @app.route("/product", methods=['GET', 'POST'])
+    def product():
+        if request.method == 'POST':
+            return ""
+        else:
+            return get_products()
+    
+    @app.route("/category", methods=['POST'])
+    def category():
+        category = request.get_json()
+        get_category(category)
+        return ""
+    
+    
+    
+    
+    
     
 
   # TO EXECUTE THE APPLICATION
