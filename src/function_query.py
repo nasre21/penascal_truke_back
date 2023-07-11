@@ -2,10 +2,14 @@ import src.database as db
 
 database_path = ""
 
+# function to connect to the database
+
 def init_db(database):
     global database_path
     database_path = database
     
+
+# function to get all the products from the database, returns them in an array
 
 def get_products():
     con = db.connectdb()
@@ -19,6 +23,8 @@ def get_products():
 
     cursor.close()
     return product_array
+
+# function to get all the products of a specific category from the database, returns them in array
 
 def get_category(category):
     con = db.connectdb()

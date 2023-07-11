@@ -9,12 +9,16 @@ def create_app(database):
     app = Flask(__name__)
     CORS(app)
     
+    # initialising the database
     init_db(database)
     
+    
+    # example route to check that the connection is correct
     @app.route("/")
     def home():
         return 'Hello World!'
     
+    # route that returns all products    
     @app.route("/product", methods=['GET', 'POST'])
     def product():
         if request.method == 'POST':
@@ -22,6 +26,7 @@ def create_app(database):
         else:
             return get_products()
     
+    # route that returns all products in a category
     @app.route("/category/<category>")
     def categories(category):
         return get_category(category)
