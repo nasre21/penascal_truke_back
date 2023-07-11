@@ -35,6 +35,10 @@ def create_app(database):
     def get_user():
         return get_users_data()
     
+    @app.route("/register", methods=["POST"])
+    def register():
+        return register_add()
+    
     
     
     

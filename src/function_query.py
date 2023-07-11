@@ -1,4 +1,5 @@
 import src.database as db
+from flask import request
 
 database_path = ""
 
@@ -54,3 +55,22 @@ def get_users_data():
     return product_array
 
 
+
+def add_register():
+    con = db.connectdb()
+    cursor = con.cursor()
+    data = request.get_json()
+    
+    lastname = data['lastname']
+    firstname = data['firstname']
+    phone = data['phone']
+    penascales = data['penascales']
+    email = data['email']
+    password = data['password']
+    
+    cursor.execute('INSERT INTO peliculas (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password))
+    
+    con.commit()
+    con.close()
+    print('user added successfully')
+    
