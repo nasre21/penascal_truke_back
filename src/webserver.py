@@ -22,8 +22,8 @@ def create_app(database):
         else:
             return get_products()
     
-    @app.route("/category", methods=['POST'])
-    def category():
+    @app.route("/category/<category>", methods=['POST'])
+    def categories(category):
         category = request.get_json()
         get_category(category)
         return ""
