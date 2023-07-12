@@ -38,6 +38,11 @@ def create_app(database):
         data = request.get_json()
         return change_product(idproduct, data)
     
+       #route that delete one user
+    @app.route("/product/delete/<int:idproduct>", methods=["DELETE"])
+    def delete_product(idproduct):
+        return delete_data_product(idproduct)
+    
     # route that returns all products in a category
     @app.route("/category/<category>")
     def categories(category):
