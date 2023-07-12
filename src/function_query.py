@@ -73,7 +73,10 @@ def get_one_product(id_product):
     else:
         return 'The user was not found' 
     
-
+#funtion to create a product
+def create_product(data):
+    
+    
 # function to change a product
 def change_product(id_product, data):
     con = db.connectdb()

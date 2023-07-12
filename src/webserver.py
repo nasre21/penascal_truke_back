@@ -30,8 +30,7 @@ def create_app(database):
     @app.route("/product")
     def product():
        return get_products()
-   
-   
+      
     #route that returns a product
     @app.route("/product/<int:idproduct>")
     def get_a_product(idproduct):
@@ -54,6 +53,12 @@ def create_app(database):
     def categories(category):
         return get_category(category)
     
+    #route that returns the data which is include in the form card product 
+    @app.route("/createproduct",methods=["POST"])
+    def createproduct():
+        data = request.get_json()
+        return create_product(data)
+    
     #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
     def register():
@@ -71,9 +76,7 @@ def create_app(database):
     @app.route("/users/<int:iduser>", methods=['GET'])
     def get_an_user(iduser):
         return get_anuser(iduser)
-    
-    
-    
+        
     #route that returns one user and give the posibility to change the data
     @app.route("/users/change/<int:iduser>", methods=["PATCH"])
     def change_user(iduser):
