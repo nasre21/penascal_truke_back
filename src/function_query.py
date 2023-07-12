@@ -75,7 +75,21 @@ def get_one_product(id_product):
     
 #funtion to create a product
 def create_product(data):
+    con = db.connectdb()
+    cursor = con.cursor()
+    data = request.get_json()
+    photo = data["photo"]
+    name = data["name"]
+    description = data["description"]
+    price = data["price"]
+    category = data["category"]
+    cursor.execute('INSERT INTO product (photo, name, description, price, category) VALUES (%s, %s, %s, %s, %s)', (photo, name, description, price, category))
+    con.commit()
+    con.close()
     
+    print('user added successfully')
+    
+    return "User created successfully"
     
 # function to change a product
 def change_product(id_product, data):
