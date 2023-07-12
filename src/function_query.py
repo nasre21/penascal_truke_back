@@ -42,6 +42,9 @@ def get_category(category):
     cursor.close()
     return product_array
 
+
+
+
 # function to get all the users that are in the database for the administrator
 def get_users_data():
     con = db.connectdb()

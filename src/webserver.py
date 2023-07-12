@@ -55,7 +55,7 @@ def create_app(database):
     #route that returns an user
     @app.route("/users/<int:iduser>", methods=['GET'])
     def get_an_user(iduser):
-        return get_an_user(iduser)
+        return get_anuser(iduser)
     
     
     

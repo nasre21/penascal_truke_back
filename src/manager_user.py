@@ -55,7 +55,7 @@ def get_users_data():
 
 
 # function to get an user to obtain the data 
-def get_an_user(id_user):
+def get_anuser(id_user):
     con = db.connectdb()
     cursor = con.cursor()
     cursor.execute('SELECT * FROM user WHERE iduser = %s', (id_user,))
