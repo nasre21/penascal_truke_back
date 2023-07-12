@@ -1,5 +1,5 @@
 import src.database as db
-from flask import request, jsonify
+from flask import request, jsonify, session
 import jwt
 
 
@@ -118,3 +118,34 @@ def delete_data_user(id_user):
     con.close()
 
     return "User was deleted"
+
+#function to login the user
+
+def login_user(key):
+    user_email = request.json['email']
+    user_password = request.json['password']
+    
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM user WHERE email = %s', (user_email,))
+    result = cursor.fetchone()
+    
+    if result is not None:
+        user_email_db = result[0]
+        user_password_db = result[1]
+        
+        # Assuming user_password_db contains the JWT token
+        try:
+            decoded_token = jwt.decode(user_password_db, key, algorithms=["HS256"])
+            
+            if user_email_db == user_email and decoded_token['password'] == user_password:
+                session['user_email_db'] = user_email_db
+                return 'Login successful'  # Return a response indicating success
+        except jwt.exceptions.DecodeError as e:
+            # Handle the decode error appropriately
+            print("JWT Decode Error:", e)
+    
+    con.commit()
+    con.close()
+    
+    return 'Login failed'  # Return a response indicating failure
