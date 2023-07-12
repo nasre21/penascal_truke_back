@@ -61,6 +61,12 @@ def create_app(database):
         data = request.get_json()
         return add_register(data, key)
     
+    # route that returns the data which is include in the form login
+    @app.route("/login", methods=["POST"])
+    def login():
+        key = secret_key()
+        return login_user(key)
+    
     
     #route that returns all users
     @app.route("/users")
