@@ -31,6 +31,12 @@ def create_app(database):
     def product():
        return get_products()
    
+   
+    #route that returns a product
+    @app.route("/product/<int:idproduct>")
+    def get_a_product(idproduct):
+        return get_one_product(idproduct)
+   
     #route that changes the data of a product
     
     @app.route("/product/upadate/<int:idproduct>", methods=["PATCH"])

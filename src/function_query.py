@@ -1,5 +1,5 @@
 import src.database as db
-from flask import request
+from flask import request, jsonify
 import jwt
 
 
@@ -44,7 +44,6 @@ def get_category(category):
 
 
 
-
 # function to get all the users that are in the database for the administrator
 def get_users_data():
     con = db.connectdb()
@@ -58,6 +57,23 @@ def get_users_data():
 
     cursor.close()
     return product_array
+
+#funtion to get one product
+def get_one_product(id_product):
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM product WHERE idproduct = %s', (id_product,))
+    data_product = cursor.fetchone()
+    
+    if data_product:
+        data = {'idproduct': data_product[0], 'photo': data_product[1], 'name': data_product[2], 'description': data_product[3], 'price': data_product[4],'category': data_product[5]}
+        con.close()
+        print(data)
+        return jsonify(data)
+    else:
+        return 'The user was not found' 
+    
+
 # function to change a product
 def change_product(id_product, data):
     con = db.connectdb()
