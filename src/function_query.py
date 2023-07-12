@@ -106,4 +106,14 @@ def change_product(id_product, data):
     return 'Dates modified'
 
 
+# function to delete a product
+
+def delete_data_product(idproduct):
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('DELETE FROM product WHERE idproduct = %s', (idproduct,))
+    con.commit()
+    con.close()
+    return 'Product deleted'
+
 
