@@ -29,7 +29,14 @@ def create_app(database):
     # route that returns all products    
     @app.route("/product")
     def product():
-            return get_products()
+       return get_products()
+   
+    #route that changes the data of a product
+    
+    @app.route("/product/upadate/<int:idproduct>", methods=["PATCH"])
+    def update_product(idproduct):
+        data = request.get_json()
+        return change_product(idproduct, data)
     
     # route that returns all products in a category
     @app.route("/category/<category>")
