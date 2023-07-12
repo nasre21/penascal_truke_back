@@ -1,5 +1,5 @@
 import src.database as db
-from flask import request, jsonify
+from flask import request, jsonify, session
 import jwt
 
 
@@ -74,7 +74,7 @@ def get_one_product(id_product):
         return 'The user was not found' 
     
 #funtion to create a product
-def create_product(data):
+# def create_product(data):
     
     
 # function to change a product
@@ -118,5 +118,41 @@ def delete_data_product(idproduct):
     con.commit()
     con.close()
     return 'Product deleted'
+
+# function to check the admin email and password if it is correct
+#function to login the user
+
+def login_admin(data, key):
+    adm_email = data['email']
+    adm_password = data['password']
+    
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
+    result = cursor.fetchone()
+
+    if result is not None:
+        adm_email_db = result[2]
+        adm_password_db = result[3]
+        print(adm_password_db)
+        print(adm_email_db)
+        
+        decoded_token = jwt.decode(adm_password_db, key, algorithms=["HS256"])
+
+        # Assuming adm_password_db contains the JWT token
+        if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
+            session['adm_email_db'] = adm_email_db
+            con.commit()
+            con.close()
+            return 'Login successful'  # Return a response indicating success
+        else:
+            con.commit()
+            con.close()
+            return 'Login failed'  # Return a response indicating login failure
+            
+    else:
+        con.commit()
+        con.close()
+        return 'User not found'  # Return a response for the case when the user is not found in the data
 
 

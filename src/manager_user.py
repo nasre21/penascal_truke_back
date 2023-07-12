@@ -121,31 +121,38 @@ def delete_data_user(id_user):
 
 #function to login the user
 
-def login_user(key):
-    user_email = request.json['email']
-    user_password = request.json['password']
-    
+def login_user(data, key):
+    user_email = data['email']
+    user_password = data['password']
+    print("data que obtenemos", user_password)
+
     con = db.connectdb()
     cursor = con.cursor()
     cursor.execute('SELECT * FROM user WHERE email = %s', (user_email,))
     result = cursor.fetchone()
-    
+
     if result is not None:
-        user_email_db = result[0]
-        user_password_db = result[1]
+        user_email_db = result[6]
+        user_password_db = result[7]
+        print(user_password_db)
+        print(user_email_db)
         
+        decoded_token = jwt.decode(user_password_db, key, algorithms=["HS256"])
+
         # Assuming user_password_db contains the JWT token
-        try:
-            decoded_token = jwt.decode(user_password_db, key, algorithms=["HS256"])
+        if user_email_db == user_email and decoded_token['contraseña'] == user_password:
+            session['user_email_db'] = user_email_db
+            con.commit()
+            con.close()
+            return 'Login successful'  # Return a response indicating success
+        else:
+            con.commit()
+            con.close()
+            return 'Login failed'  # Return a response indicating login failure
             
-            if user_email_db == user_email and decoded_token['password'] == user_password:
-                session['user_email_db'] = user_email_db
-                return 'Login successful'  # Return a response indicating success
-        except jwt.exceptions.DecodeError as e:
-            # Handle the decode error appropriately
-            print("JWT Decode Error:", e)
+    else:
+        con.commit()
+        con.close()
+        return 'User not found'  # Return a response for the case when the user is not found in the database
     
-    con.commit()
-    con.close()
-    
-    return 'Login failed'  # Return a response indicating failure
+   

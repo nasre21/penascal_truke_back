@@ -54,10 +54,10 @@ def create_app(database):
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
-    @app.route("/createproduct",methods=["POST"])
-    def createproduct():
-        data = request.get_json()
-        return create_product(data)
+    # @app.route("/createproduct",methods=["POST"])
+    # def createproduct():
+    #     data = request.get_json()
+    #     return create_product(data)
     
     #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
@@ -70,8 +70,15 @@ def create_app(database):
     @app.route("/login", methods=["POST"])
     def login():
         key = secret_key()
-        return login_user(key)
+        data = request.get_json()
+        return login_user(data,key)
     
+    #router that check the admin email and password 
+    @app.route("/admin", methods=["POST"])
+    def adm_login():
+        key = secret_key()
+        data = request.get_json()
+        return login_admin(data, key)
     
     #route that returns all users
     @app.route("/users")
