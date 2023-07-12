@@ -58,5 +58,36 @@ def get_users_data():
 
     cursor.close()
     return product_array
+# function to change a product
+def change_product(id_product, data):
+    con = db.connectdb()
+    cursor = con.cursor()
+    
+    if "photo" in data:
+        photo = data["photo"]
+        cursor.execute('UPDATE product SET photo = %s WHERE idproduct = %s', (photo, id_product))
+
+    if "name" in data:
+        name = data["name"]
+        cursor.execute('UPDATE product SET name = %s WHERE idproduct = %s', (name, id_product))
+
+    if "description" in data:
+        description = data["description"]
+        cursor.execute('UPDATE product SET description = %s WHERE idproduct = %s', (description, id_product))
+
+    if "price" in data:
+        price = data["price"]
+        cursor.execute('UPDATE product SET price = %s WHERE idproduct = %s', (price, id_product))
+
+    if "category" in data:
+        category = data["category"]
+        cursor.execute('UPDATE product SET category = %s WHERE idproduct = %s', (category, id_product)) 
+
+              
+    con.commit()
+    con.close()
+
+    return 'Dates modified'
+
 
 
