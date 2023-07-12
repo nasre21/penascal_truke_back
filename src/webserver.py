@@ -3,6 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from src.function_query import *
+from src.manager_user import *
 from src.jwt import *
 
 
@@ -38,15 +39,7 @@ def create_app(database):
     def categories(category):
         return get_category(category)
     
-    @app.route("/users")
-    def get_user():
-        return get_users_data()
-    
-    # @app.route("/register", methods=["POST"])
-    # def register():
-    #     app.secret_key = "secret"
-    #     return add_register(request, app.secret_key)
-    
+    #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
     def register():
         key = secret_key()
@@ -54,7 +47,32 @@ def create_app(database):
         return add_register(data, key)
     
     
+    #route that returns all users
+    @app.route("/users")
+    def get_user():
+        return get_users_data()
     
+    #route that returns an user
+    @app.route("/users/<int:iduser>", methods=['GET'])
+    def get_an_user(iduser):
+        return get_an_user(iduser)
+    
+    
+    
+    #route that returns one user and give the posibility to change the data
+    @app.route("/users/change/<int:iduser>", methods=["PATCH"])
+    def change_user(iduser):
+        data = request.get_json()
+        return change_data_user(iduser, data)
+    
+    #route that delete one user
+    @app.route("/users/delete/<int:iduser>", methods=["DELETE"])
+    def delete_user(iduser):
+        return delete_data_user(iduser)
+    
+  
+    
+        
 
   # TO EXECUTE THE APPLICATION
     if __name__ == '__main__':
