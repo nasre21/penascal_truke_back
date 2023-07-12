@@ -27,11 +27,8 @@ def create_app(database):
         return 'Hello World!'
     
     # route that returns all products    
-    @app.route("/product", methods=['GET', 'POST'])
+    @app.route("/product")
     def product():
-        if request.method == 'POST':
-            return ""
-        else:
             return get_products()
     
     # route that returns all products in a category
