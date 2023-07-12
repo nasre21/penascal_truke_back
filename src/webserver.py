@@ -3,6 +3,7 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from src.function_query import *
+from src.jwt import *
 
 
 
@@ -48,8 +49,9 @@ def create_app(database):
     
     @app.route("/register", methods=["POST"])
     def register():
+        key = secret_key()
         data = request.get_json()
-        return add_register(data)
+        return add_register(data, key)
     
     
     

@@ -57,35 +57,7 @@ def get_users_data():
     return product_array
 
 
-
-# def add_register(request, key):
-#     lastname = request.form['lastname']
-#     firstname = request.form['firstname']
-#     phone = request.form['phone']
-#     penascales = request.form['penascales']
-#     email = request.form['email']
-#     password = request.form['password']
-    
-#     payloads = {
-#         "contraseña": password
-#     }
-    
-#     # data = request.get_json()
-    
-#     con = db.connectdb()
-#     cursor = con.cursor()
-    
-#     password_encoded = jwt.encode(payloads, key, algorithm="HS256")
-   
-#     cursor.execute('INSERT INTO user (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password_encoded))
-    
-#     con.commit()
-#     con.close()
-#     print('user added successfully')
-    
-#     return "User created successfully"
-
-def add_register(data):
+def add_register(data, key):
     con = db.connectdb()
     cursor = con.cursor()
   
@@ -95,11 +67,15 @@ def add_register(data):
     penascales = data['penascales']
     email = data['email']
     password = data['password']
+    payloads = {
+        "contraseña": password
+    }
+    password_encoded = jwt.encode(payloads, key, algorithm="HS256")
     
     data = request.get_json()
       
    
-    cursor.execute('INSERT INTO user (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password))
+    cursor.execute('INSERT INTO user (lastname, firstname, phone, penascales, email, password) VALUES (%s, %s, %s, %s, %s, %s)',(lastname, firstname, phone, penascales, email, password_encoded))
     
     con.commit()
     con.close()
