@@ -17,11 +17,11 @@ def init_db(database):
 def get_products():
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM user")
-    myusers = cursor.fetchall()
+    cursor.execute("SELECT * FROM product")
+    myproducts = cursor.fetchall()
     product_array = []
     product_col_Names = [column[0] for column in cursor.description]
-    for product in myusers:
+    for product in  myproducts:
         product_array.append(dict(zip(product_col_Names, product)))
 
     cursor.close()
@@ -34,13 +34,13 @@ def get_category(category):
     cursor = con.cursor()
     select_query = "SELECT * FROM product WHERE category = %s"
     cursor.execute(select_query, (category,))
-    myproducts = cursor.fetchall()
-    product_array = []
-    product_col_Names = [column[0] for column in cursor.description]
-    for product in myproducts:
-        product_array.append(dict(zip(product_col_Names, product)))
+    mycategory = cursor.fetchall()
+    categorys_array = []
+    categorys_col_Names = [column[0] for column in cursor.description]
+    for categorys in mycategory:
+        categorys_array.append(dict(zip(categorys_col_Names, categorys)))
     cursor.close()
-    return product_array
+    return categorys_array
 
 
 
@@ -50,13 +50,13 @@ def get_users_data():
     cursor = con.cursor()
     cursor.execute("SELECT * FROM user")
     myusers = cursor.fetchall()
-    product_array = []
-    product_col_Names = [column[0] for column in cursor.description]
-    for product in myusers:
-        product_array.append(dict(zip(product_col_Names, product)))
+    user_array = []
+    user_col_Names = [column[0] for column in cursor.description]
+    for user in myusers:
+        user_array.append(dict(zip(user_col_Names, user)))
 
     cursor.close()
-    return product_array
+    return user_array
 
 #funtion to get one product
 def get_one_product(id_product):
@@ -71,7 +71,7 @@ def get_one_product(id_product):
         print(data)
         return jsonify(data)
     else:
-        return 'The user was not found' 
+        return 'The product was not found' 
     
 #funtion to create a product
 def create_product(data):
@@ -87,9 +87,9 @@ def create_product(data):
     con.commit()
     con.close()
     
-    print('user added successfully')
+    print('product added successfully')
     
-    return "User created successfully"
+    return "Product created successfully"
     
 # function to change a product
 def change_product(id_product, data):
@@ -136,6 +136,38 @@ def delete_data_product(idproduct):
 # function to check the admin email and password if it is correct
 #function to login the user
 
+def login_admin(data, key):
+    adm_email = data['email']
+    adm_password = data['password']
+    
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
+    result = cursor.fetchone()
 
+    if result is not None and len(result) >= 5:  # Verificar si result no es None y tiene al menos 5 elementos
+        adm_email_db = result[2]
+        adm_password_db = result[3]
+        print(adm_password_db)
+        print(adm_email_db)
+        
+        decoded_token = jwt.decode(adm_password_db, key, algorithms=["HS256"])
+
+        # Assuming adm_password_db contains the JWT token
+        if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
+            session['adm_email_db'] = adm_email_db
+            con.commit()
+            con.close()
+            return 'Login successful'  # Return a response indicating success
+        else:
+            con.commit()
+            con.close()
+            return 'Login failed'  # Return a response indicating login failure
+            
+    else:
+        con.commit()
+        con.close()
+        return 'Admin not found'  # Return a response for the case when the user is not found in the data
+  # Return a response for the case when the user is not found in the data
 
 
