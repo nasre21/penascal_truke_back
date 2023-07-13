@@ -139,22 +139,27 @@ def delete_data_product(idproduct):
 def login_admin(data, key):
     adm_email = data['email']
     adm_password = data['password']
-    
+    print("Data obtained:", adm_password)
+
     con = db.connectdb()
     cursor = con.cursor()
     cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
     result = cursor.fetchone()
 
-    if result is not None and len(result) >= 5:  # Verificar si result no es None y tiene al menos 5 elementos
+    if result is not None:
         adm_email_db = result[2]
-        adm_password_db = result[3]
-        print(adm_password_db)
-        print(adm_email_db)
-        
-        decoded_token = jwt.decode(adm_password_db, key, algorithms=["HS256"])
+        jwt_token_db = result[3]  # Assumes the JWT token is stored in the database
+        print("Stored JWT token:", jwt_token_db)
+        print("Stored email:", adm_email_db)
 
-        # Assuming adm_password_db contains the JWT token
-        if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
+        try:
+            decoded_token = jwt.decode(jwt_token_db, key, algorithms=["HS256"])
+        except jwt.exceptions.InvalidSignatureError:
+            con.commit()
+            con.close()
+            return 'Login failed'  # Return a response indicating login failure
+
+        if decoded_token['email'] == adm_email_db and adm_password == decoded_token['password']:
             session['adm_email_db'] = adm_email_db
             con.commit()
             con.close()
@@ -163,11 +168,9 @@ def login_admin(data, key):
             con.commit()
             con.close()
             return 'Login failed'  # Return a response indicating login failure
-            
+
     else:
         con.commit()
         con.close()
-        return 'Admin not found'  # Return a response for the case when the user is not found in the data
-  # Return a response for the case when the user is not found in the data
-
+        return 'Admin not found'
 
