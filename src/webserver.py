@@ -55,10 +55,10 @@ def create_app(database):
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
-    # @app.route("/createproduct",methods=["POST"])
-    # def createproduct():
-    #     data = request.get_json()
-    #     return create_product(data)
+    @app.route("/createproduct",methods=["POST"])
+    def createproduct():
+        data = request.get_json()
+        return create_product(data)
     
     #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
