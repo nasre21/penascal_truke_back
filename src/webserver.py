@@ -15,12 +15,8 @@ def create_app(database):
     
     # initialising the database
     init_db(database)
-    def secret_key():
-        app.secret_key = "secret"
-        return app.secret_key
-    key = secret_key()
 
-    
+
     # example route to check that the connection is correct
     @app.route("/")
     def home():
@@ -43,7 +39,12 @@ def create_app(database):
         data = request.get_json()
         return change_product(idproduct, data)
     
-       #route that delete one user
+    # route join product with user
+    @app.route("/productjoin/<product_id>", methods=["GET"])
+    def join_product(product_id):
+        return join_product_user(product_id)
+    
+    #route that delete one user
     @app.route("/product/delete/<int:idproduct>", methods=["DELETE"])
     def delete_product(idproduct):
         return delete_data_product(idproduct)

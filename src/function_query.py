@@ -133,44 +133,42 @@ def delete_data_product(idproduct):
     con.close()
     return 'Product deleted'
 
-# function to check the admin email and password if it is correct
-#function to login the user
 
-def login_admin(data, key):
-    adm_email = data['email']
-    adm_password = data['password']
-    print("Data obtained:", adm_password)
-
+# join function user with product
+def join_product_user(product_id):
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
+
+    query = """
+  SELECT *
+FROM product
+INNER JOIN user ON product.userid = user.iduser
+WHERE product.idproduct =%s;
+    """
+    cursor.execute(query, (product_id,))
     result = cursor.fetchone()
 
-    if result is not None:
-        adm_email_db = result[2]
-        jwt_token_db = result[3]  # Assumes the JWT token is stored in the database
-        print("Stored JWT token:", jwt_token_db)
-        print("Stored email:", adm_email_db)
+    cursor.close()
+    con.close()
 
-        try:
-            decoded_token = jwt.decode(jwt_token_db, key, algorithms=["HS256"])
-        except jwt.exceptions.InvalidSignatureError:
-            con.commit()
-            con.close()
-            return 'Login failed'  # Return a response indicating login failure
-
-        if decoded_token['email'] == adm_email_db and adm_password == decoded_token['password']:
-            session['adm_email_db'] = adm_email_db
-            con.commit()
-            con.close()
-            return 'Login successful'  # Return a response indicating success
-        else:
-            con.commit()
-            con.close()
-            return 'Login failed'  # Return a response indicating login failure
-
+    if result:
+        product = {
+            'idproduct': result[0],
+            'photo': result[1],
+            'name': result[2],
+            'description': result[3],
+            'price': result[4],
+            'category': result[5],
+            'userid': result[6],
+            'iduser': result[7],
+            'lastname': result[8],
+            'firstname': result[9],
+            'phone': result[10],
+            'sector': result[11],
+            'penascales': result[12],
+            'email': result[13]
+        }
+        return product
     else:
-        con.commit()
-        con.close()
-        return 'Admin not found'
+        return None
 
