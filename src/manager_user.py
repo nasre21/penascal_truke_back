@@ -196,3 +196,36 @@ def login_admin(data, key):
         con.close()
         return 'Admin not found'  # Return a response for the case when the admin is not found in the data
 
+def join_data_seller(idseller):
+    con = db.connectdb()
+    cursor = con.cursor()
+
+    query = """
+        SELECT *
+        FROM user
+        INNER JOIN seller ON user.seller_id = seller.idseller
+        WHERE user.iduser =%s;
+    """
+    cursor.execute(query, (idseller,))
+    result = cursor.fetchone()
+
+    cursor.close()
+    con.close()
+
+    if result:
+        user = {
+            'iduser': result[0],
+            'lastname': result[1],
+            'firstname': result[2],
+            'phone': result[3],
+            'sector': result[4],
+            'penascales': result[5],
+            'email': result[6],
+            'idseller': result[8],
+            'userid': result[9],
+            'productid': result[10],
+        }
+        return user
+    else:
+        return None
+

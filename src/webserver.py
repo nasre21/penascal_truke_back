@@ -40,7 +40,7 @@ def create_app(database):
         return change_product(idproduct, data)
     
     # route join product with user
-    @app.route("/productjoin/<product_id>", methods=["GET"])
+    @app.route("/product/user/<product_id>", methods=["GET"])
     def join_product(product_id):
         return join_product_user(product_id)
     
@@ -101,6 +101,12 @@ def create_app(database):
     @app.route("/users/delete/<int:iduser>", methods=["DELETE"])
     def delete_user(iduser):
         return delete_data_user(iduser)
+    
+    
+    # route for join user with seller
+    @app.route("/users/seller/<int:idseller>", methods=["GET"])
+    def join_user(idseller):
+        return join_data_seller(idseller)
     
   
     

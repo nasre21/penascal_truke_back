@@ -140,10 +140,10 @@ def join_product_user(product_id):
     cursor = con.cursor()
 
     query = """
-  SELECT *
-FROM product
-INNER JOIN user ON product.userid = user.iduser
-WHERE product.idproduct =%s;
+        SELECT *
+        FROM product
+        INNER JOIN user ON product.userid = user.iduser
+        WHERE product.idproduct =%s;
     """
     cursor.execute(query, (product_id,))
     result = cursor.fetchone()
