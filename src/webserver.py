@@ -11,7 +11,8 @@ from src.jwt import *
 def create_app(database):
     
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+
     
     # initialising the database
     init_db(database)

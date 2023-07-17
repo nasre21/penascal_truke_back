@@ -21,11 +21,18 @@ def get_products():
     myproducts = cursor.fetchall()
     product_array = []
     product_col_Names = [column[0] for column in cursor.description]
-    for product in  myproducts:
-        product_array.append(dict(zip(product_col_Names, product)))
+    for product in myproducts:
+        decoded_product = {}
+        for i, value in enumerate(product):
+            if isinstance(value, bytes):
+                decoded_product[product_col_Names[i]] = value.decode('utf-8')
+            else:
+                decoded_product[product_col_Names[i]] = value
+        product_array.append(decoded_product)
 
     cursor.close()
     return product_array
+
 
 # function to get all the products of a specific category from the database, returns them in array
 
@@ -78,12 +85,13 @@ def create_product(data):
     con = db.connectdb()
     cursor = con.cursor()
     data = request.get_json()
-    photo = data["photo"]
+    files= data["files"]
     name = data["name"]
     description = data["description"]
     price = data["price"]
+    userid = data["userid"]
     category = data["category"]
-    cursor.execute('INSERT INTO product (photo, name, description, price, category) VALUES (%s, %s, %s, %s, %s)', (photo, name, description, price, category))
+    cursor.execute('INSERT INTO product (files, name, description, price, category, userid) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, userid,))
     con.commit()
     con.close()
     
@@ -96,9 +104,9 @@ def change_product(id_product, data):
     con = db.connectdb()
     cursor = con.cursor()
     
-    if "photo" in data:
-        photo = data["photo"]
-        cursor.execute('UPDATE product SET photo = %s WHERE idproduct = %s', (photo, id_product))
+    if "files" in data:
+        files= data["files"]
+        cursor.execute('UPDATE product SET files= %s WHERE idproduct = %s', (files, id_product))
 
     if "name" in data:
         name = data["name"]
