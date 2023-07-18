@@ -2,7 +2,6 @@ import src.database as db
 from flask import request, jsonify, session
 import jwt
 
-
 database_path = ""
 
 # function to connect to the database

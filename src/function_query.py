@@ -1,9 +1,16 @@
 import src.database as db
 from flask import request, jsonify, session
 import jwt
+import json
 
+import cloudinary
+import cloudinary.uploader
+
+from src.cloudinary_credentials import cloud_name, api_key, api_secret
 
 database_path = ""
+
+
 
 # function to connect to the database
 
@@ -11,6 +18,11 @@ def init_db(database):
     global database_path
     database_path = database
     
+cloudinary.config(
+    cloud_name=cloud_name,
+    api_key=api_key,
+    api_secret=api_secret
+)
 
 # function to get all the products from the database, returns them in an array
 
@@ -83,14 +95,23 @@ def get_one_product(id_product):
 def create_product(data):
     con = db.connectdb()
     cursor = con.cursor()
-    data = request.get_json()
     files= data["files"]
+    print("esto es files", data["files"])
     name = data["name"]
     description = data["description"]
     price = data["price"]
-    userid = data["userid"]
+    iduser = data["iduser"]
     category = data["category"]
-    cursor.execute('INSERT INTO product (files, name, description, price, category, userid) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, userid,))
+
+    # Subir las imágenes a Cloudinary
+    uploaded_images = []
+    for file in files:
+        upload_result = cloudinary.uploader.upload(file)
+        uploaded_images.append(upload_result["secure_url"])
+
+    uploaded_images_json = json.dumps(uploaded_images)
+
+    cursor.execute('INSERT INTO product (files, name, description, price, category, iduser) VALUES (%s, %s, %s, %s, %s, %s)', (uploaded_images_json, name, description, price, category, iduser,))
     con.commit()
     con.close()
     
