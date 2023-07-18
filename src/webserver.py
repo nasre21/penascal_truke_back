@@ -10,12 +10,17 @@ from src.jwt import *
 def create_app(database):
     
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "http://localhost:8080"}})
+
     
     # initialising the database
     init_db(database)
+    def secret_key():
+        app.secret_key = "secret"
+        return app.secret_key
+    key = secret_key()
 
-    
+
     # example route to check that the connection is correct
     @app.route("/")
     def home():
@@ -38,7 +43,12 @@ def create_app(database):
         data = request.get_json()
         return change_product(idproduct, data)
     
-       #route that delete one user
+    # route join product with user
+    @app.route("/product/user/<product_id>", methods=["GET"])
+    def join_product(product_id):
+        return join_product_user(product_id)
+    
+    #route that delete one user
     @app.route("/product/delete/<int:idproduct>", methods=["DELETE"])
     def delete_product(idproduct):
         return delete_data_product(idproduct)
@@ -49,10 +59,10 @@ def create_app(database):
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
-    @app.route("/createproduct", methods=["POST"])
-    def createproduct():
-        data = request.get_json()
-        return create_product(data)
+    # @app.route("/createproduct",methods=["POST"])
+    # def createproduct():
+    #     data = request.get_json()
+    #     return create_product(data)
     
     #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
@@ -95,6 +105,12 @@ def create_app(database):
     @app.route("/users/delete/<int:iduser>", methods=["DELETE"])
     def delete_user(iduser):
         return delete_data_user(iduser)
+    
+    
+    # route for join user with seller
+    @app.route("/users/seller/<int:idseller>", methods=["GET"])
+    def join_user(idseller):
+        return join_data_seller(idseller)
     
   
     

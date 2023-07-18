@@ -156,3 +156,76 @@ def login_user(data, key):
         return 'User not found'  # Return a response for the case when the user is not found in the database
     
    
+def login_admin(data, key):
+    adm_email = data['email']
+    adm_password = data['password']
+    print("data que obtenemos", adm_email)
+    print("data que obtenemos", adm_password)
+
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
+    result = cursor.fetchone()
+
+    if result is not None:
+        adm_email_db = result[2]
+        adm_password_db = result[3]
+        print("esto es email de la base datos", adm_email_db)
+        print("esto es password de la base de datos", adm_password_db)
+        
+
+        decoded_token = jwt.decode(adm_password_db, key, algorithms=["HS256"])
+        
+        print("esto es la contraseña", decoded_token)
+        
+        print("esto es la contraseña desencriptada", decoded_token['contraseña'])
+
+        # Assuming adm_password_db contains the JWT token
+        if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
+            session['adm_email_db'] = adm_email_db
+            con.commit()
+            con.close()
+            return 'Login successful'  # Return a response indicating success
+        else:
+            con.commit()
+            con.close()
+            return 'Login failed'  # Return a response indicating login failure
+
+    else:
+        con.commit()
+        con.close()
+        return 'Admin not found'  # Return a response for the case when the admin is not found in the data
+
+def join_data_seller(idseller):
+    con = db.connectdb()
+    cursor = con.cursor()
+
+    query = """
+        SELECT *
+        FROM user
+        INNER JOIN seller ON user.seller_id = seller.idseller
+        WHERE user.iduser =%s;
+    """
+    cursor.execute(query, (idseller,))
+    result = cursor.fetchone()
+
+    cursor.close()
+    con.close()
+
+    if result:
+        user = {
+            'iduser': result[0],
+            'lastname': result[1],
+            'firstname': result[2],
+            'phone': result[3],
+            'sector': result[4],
+            'penascales': result[5],
+            'email': result[6],
+            'idseller': result[8],
+            'userid': result[9],
+            'productid': result[10],
+        }
+        return user
+    else:
+        return None
+
