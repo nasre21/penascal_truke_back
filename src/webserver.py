@@ -15,10 +15,6 @@ def create_app(database):
     
     # initialising the database
     init_db(database)
-    def secret_key():
-        app.secret_key = "secret"
-        return app.secret_key
-    key = secret_key()
 
 
     # example route to check that the connection is correct
@@ -59,18 +55,19 @@ def create_app(database):
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
-    # @app.route("/createproduct",methods=["POST"])
-    # def createproduct():
-    #     data = request.get_json()
-    #     return create_product(data)
+    @app.route("/createproduct",methods=["POST"])
+    def createproduct():
+         data = request.get_json()
+         return create_product(data)
     
-    #route that returns the data which is include in the form register
+   #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
     def register():
         key = secret_key()
         data = request.get_json()
         return add_register(data, key)
-    
+
+        
     # route that returns the data which is include in the form login
     @app.route("/login", methods=["POST"])
     def login():
@@ -112,12 +109,8 @@ def create_app(database):
     def join_user(idseller):
         return join_data_seller(idseller)
     
-  
-    
-        
-
-  # TO EXECUTE THE APPLICATION
-    if __name__ == '__main__':
-        app.run(debug=True)
-    # with app.run we're going to indicate that the app is going to be in development
+     
     return app
+
+
+        
