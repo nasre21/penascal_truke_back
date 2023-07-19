@@ -61,13 +61,14 @@ def create_app(database):
         data = request.get_json()
         return create_product(data)
     
-    #route that returns the data which is include in the form register
+   #route that returns the data which is include in the form register
     @app.route("/register", methods=["POST"])
     def register():
         key = secret_key()
         data = request.get_json()
         return add_register(data, key)
-    
+
+        
     # route that returns the data which is include in the form login
     @app.route("/login", methods=["POST"])
     def login():

@@ -40,13 +40,9 @@ def get_products():
             else:
                 decoded_product[product_col_Names[i]] = value
         product_array.append(decoded_product)
-
     cursor.close()
     return product_array
-
-
 # function to get all the products of a specific category from the database, returns them in array
-
 def get_category(category):
     con = db.connectdb()
     cursor = con.cursor()
@@ -59,9 +55,6 @@ def get_category(category):
         categorys_array.append(dict(zip(categorys_col_Names, categorys)))
     cursor.close()
     return categorys_array
-
-
-
 # function to get all the users that are in the database for the administrator
 def get_users_data():
     con = db.connectdb()
@@ -72,10 +65,8 @@ def get_users_data():
     user_col_Names = [column[0] for column in cursor.description]
     for user in myusers:
         user_array.append(dict(zip(user_col_Names, user)))
-
     cursor.close()
     return user_array
-
 #funtion to get one product
 def get_one_product(id_product):
     con = db.connectdb()
@@ -123,32 +114,23 @@ def change_product(id_product, data):
     if "files" in data:
         files= data["files"]
         cursor.execute('UPDATE product SET files= %s WHERE idproduct = %s', (files, id_product))
-
     if "name" in data:
         name = data["name"]
         cursor.execute('UPDATE product SET name = %s WHERE idproduct = %s', (name, id_product))
-
     if "description" in data:
         description = data["description"]
         cursor.execute('UPDATE product SET description = %s WHERE idproduct = %s', (description, id_product))
-
     if "price" in data:
         price = data["price"]
         cursor.execute('UPDATE product SET price = %s WHERE idproduct = %s', (price, id_product))
-
     if "category" in data:
         category = data["category"]
         cursor.execute('UPDATE product SET category = %s WHERE idproduct = %s', (category, id_product)) 
-
               
     con.commit()
     con.close()
-
     return 'Dates modified'
-
-
 # function to delete a product
-
 def delete_data_product(idproduct):
     con = db.connectdb()
     cursor = con.cursor()
@@ -156,13 +138,10 @@ def delete_data_product(idproduct):
     con.commit()
     con.close()
     return 'Product deleted'
-
-
 # join function user with product
 def join_product_user(product_id):
     con = db.connectdb()
     cursor = con.cursor()
-
     query = """
         SELECT *
         FROM product
@@ -171,10 +150,8 @@ def join_product_user(product_id):
     """
     cursor.execute(query, (product_id,))
     result = cursor.fetchone()
-
     cursor.close()
     con.close()
-
     if result:
         product = {
             'idproduct': result[0],
