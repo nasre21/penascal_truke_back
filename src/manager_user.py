@@ -122,6 +122,7 @@ def delete_data_user(id_user):
 #function to login the user
 
 def login_user(data, key):
+    
     user_email = data['email']
     user_password = data['password']
     print("data que obtenemos", user_password)
@@ -141,7 +142,7 @@ def login_user(data, key):
 
         # Assuming user_password_db contains the JWT token
         if user_email_db == user_email and decoded_token['contraseña'] == user_password:
-            session['user_email_db'] = user_email_db
+            #session['user_email_db'] = user_email
             con.commit()
             con.close()
             return 'Login successful'  # Return a response indicating success
@@ -154,6 +155,8 @@ def login_user(data, key):
         con.commit()
         con.close()
         return 'User not found'  # Return a response for the case when the user is not found in the database
+        
+    
     
    
 def login_admin(data, key):
