@@ -1,16 +1,27 @@
 import src.database as db
 from flask import request, jsonify, session
 import jwt
+import json
 
+import cloudinary
+import cloudinary.uploader
+
+from src.cloudinary_credentials import cloud_name, api_key, api_secret
 
 database_path = ""
+
 
 # function to connect to the database
 
 def init_db(database):
     global database_path
     database_path = database
-    
+
+cloudinary.config(
+    cloud_name=cloud_name,
+    api_key=api_key,
+    api_secret=api_secret
+)
 
 # function to get all the products from the database, returns them in an array
 
