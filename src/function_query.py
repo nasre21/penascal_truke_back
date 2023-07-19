@@ -17,15 +17,22 @@ def init_db(database):
 def get_products():
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM user")
-    myusers = cursor.fetchall()
+    cursor.execute("SELECT * FROM product")
+    myproducts = cursor.fetchall()
     product_array = []
     product_col_Names = [column[0] for column in cursor.description]
-    for product in myusers:
-        product_array.append(dict(zip(product_col_Names, product)))
+    for product in myproducts:
+        decoded_product = {}
+        for i, value in enumerate(product):
+            if isinstance(value, bytes):
+                decoded_product[product_col_Names[i]] = value.decode('utf-8')
+            else:
+                decoded_product[product_col_Names[i]] = value
+        product_array.append(decoded_product)
 
     cursor.close()
     return product_array
+
 
 # function to get all the products of a specific category from the database, returns them in array
 
@@ -34,13 +41,13 @@ def get_category(category):
     cursor = con.cursor()
     select_query = "SELECT * FROM product WHERE category = %s"
     cursor.execute(select_query, (category,))
-    myproducts = cursor.fetchall()
-    product_array = []
-    product_col_Names = [column[0] for column in cursor.description]
-    for product in myproducts:
-        product_array.append(dict(zip(product_col_Names, product)))
+    mycategory = cursor.fetchall()
+    categorys_array = []
+    categorys_col_Names = [column[0] for column in cursor.description]
+    for categorys in mycategory:
+        categorys_array.append(dict(zip(categorys_col_Names, categorys)))
     cursor.close()
-    return product_array
+    return categorys_array
 
 
 
@@ -50,13 +57,13 @@ def get_users_data():
     cursor = con.cursor()
     cursor.execute("SELECT * FROM user")
     myusers = cursor.fetchall()
-    product_array = []
-    product_col_Names = [column[0] for column in cursor.description]
-    for product in myusers:
-        product_array.append(dict(zip(product_col_Names, product)))
+    user_array = []
+    user_col_Names = [column[0] for column in cursor.description]
+    for user in myusers:
+        user_array.append(dict(zip(user_col_Names, user)))
 
     cursor.close()
-    return product_array
+    return user_array
 
 #funtion to get one product
 def get_one_product(id_product):
@@ -71,34 +78,35 @@ def get_one_product(id_product):
         print(data)
         return jsonify(data)
     else:
-        return 'The user was not found' 
+        return 'The product was not found' 
     
 #funtion to create a product
 def create_product(data):
     con = db.connectdb()
     cursor = con.cursor()
     data = request.get_json()
-    photo = data["photo"]
+    files= data["files"]
     name = data["name"]
     description = data["description"]
     price = data["price"]
+    userid = data["userid"]
     category = data["category"]
-    cursor.execute('INSERT INTO product (photo, name, description, price, category) VALUES (%s, %s, %s, %s, %s)', (photo, name, description, price, category))
+    cursor.execute('INSERT INTO product (files, name, description, price, category, userid) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, userid,))
     con.commit()
     con.close()
     
-    print('user added successfully')
+    print('product added successfully')
     
-    return "User created successfully"
+    return "Product created successfully"
     
 # function to change a product
 def change_product(id_product, data):
     con = db.connectdb()
     cursor = con.cursor()
     
-    if "photo" in data:
-        photo = data["photo"]
-        cursor.execute('UPDATE product SET photo = %s WHERE idproduct = %s', (photo, id_product))
+    if "files" in data:
+        files= data["files"]
+        cursor.execute('UPDATE product SET files= %s WHERE idproduct = %s', (files, id_product))
 
     if "name" in data:
         name = data["name"]
@@ -133,40 +141,56 @@ def delete_data_product(idproduct):
     con.close()
     return 'Product deleted'
 
-# function to check the admin email and password if it is correct
-#function to login the user
 
-def login_admin(data, key):
-    adm_email = data['email']
-    adm_password = data['password']
-    
+# join function user with product
+def join_product_user(product_id):
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute('SELECT * FROM admin WHERE email = %s', (adm_email,))
+
+    query = """
+        SELECT *
+        FROM product
+        INNER JOIN user ON product.userid = user.iduser
+        WHERE product.idproduct =%s;
+    """
+    cursor.execute(query, (product_id,))
     result = cursor.fetchone()
 
-    if result is not None:
-        adm_email_db = result[2]
-        adm_password_db = result[3]
-        print(adm_password_db)
-        print(adm_email_db)
-        
-        decoded_token = jwt.decode(adm_password_db, key, algorithms=["HS256"])
+    cursor.close()
+    con.close()
 
-        # Assuming adm_password_db contains the JWT token
-        if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
-            session['adm_email_db'] = adm_email_db
-            con.commit()
-            con.close()
-            return 'Login successful'  # Return a response indicating success
-        else:
-            con.commit()
-            con.close()
-            return 'Login failed'  # Return a response indicating login failure
-            
+    if result:
+        product = {
+            'idproduct': result[0],
+            'photo': result[1],
+            'name': result[2],
+            'description': result[3],
+            'price': result[4],
+            'category': result[5],
+            'userid': result[6],
+            'iduser': result[7],
+            'lastname': result[8],
+            'firstname': result[9],
+            'phone': result[10],
+            'sector': result[11],
+            'penascales': result[12],
+            'email': result[13]
+        }
+        return product
     else:
-        con.commit()
-        con.close()
-        return 'User not found'  # Return a response for the case when the user is not found in the data
+        return None
 
 
+
+def data_buy():
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM buy")
+    buyer_data = cursor.fetchall()
+    buyer_array = []
+    buyer_col = [column[0] for column in cursor.description]
+    for each_buy in buyer_data:
+        buyer_array.append(dict(zip(buyer_col, each_buy)))
+
+    cursor.close()
+    return buyer_array

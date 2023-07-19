@@ -1,6 +1,9 @@
 flask
 flask_cors
 mysql-connector
+<<<<<<< HEAD
 mysql-connector-python
+=======
+>>>>>>> b6aa7b22af47c830b7b2eb2180b0b67778d7cf56
 PyJWT
 Cloudinary
