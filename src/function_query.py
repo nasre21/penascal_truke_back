@@ -93,10 +93,9 @@ def create_product(data):
     name = data["name"]
     description = data["description"]
     price = data["price"]
-    userid = data["userid"]
     iduser = data["iduser"]
     category = data["category"]
-    cursor.execute('INSERT INTO product (files, name, description, price, category, userid) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, userid,))
+    cursor.execute('INSERT INTO product (files, name, description, price, category, iduser) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, iduser,))
 
     # Subir las imágenes a Cloudinary
     uploaded_images = []
