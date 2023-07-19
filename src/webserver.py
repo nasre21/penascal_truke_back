@@ -15,11 +15,6 @@ def create_app(database):
     
     # initialising the database
     init_db(database)
-    def secret_key():
-        app.secret_key = "secret"
-        return app.secret_key
-    key = secret_key()
-
     
     # example route to check that the connection is correct
     @app.route("/")
