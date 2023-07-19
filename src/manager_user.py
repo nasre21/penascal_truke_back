@@ -158,8 +158,33 @@ def login_user(data, key):
         
     
     
+# register a new admin
+def add_register_admin(data, key):
+    con = db.connectdb()
+    cursor = con.cursor()
+  
+    name = data['name']
+    email = data['email']
+    password = data['password']
+    
+    payloads = {
+        "contraseña": password
+    }
+    password_encoded = jwt.encode(payloads, key, algorithm="HS256")
+    
+    data = request.get_json()
+      
    
-def login_admin(data, key):
+    cursor.execute('INSERT INTO admin (name, email, password) VALUES (%s, %s, %s)',(name,email, password_encoded))
+    
+    con.commit()
+    con.close()
+    print('user added successfully')
+    
+    return "User created successfully"
+
+
+def admin_login_data(data, key):
     adm_email = data['email']
     adm_password = data['password']
     print("data que obtenemos", adm_email)
@@ -185,7 +210,7 @@ def login_admin(data, key):
 
         # Assuming adm_password_db contains the JWT token
         if adm_email_db == adm_email and decoded_token['contraseña'] == adm_password:
-            session['adm_email_db'] = adm_email_db
+            # session['adm_email_db'] = adm_email_db
             con.commit()
             con.close()
             return 'Login successful'  # Return a response indicating success
@@ -233,15 +258,16 @@ def join_data_seller(idseller):
         return None
 
 # get admin data
-def get_admin_data():
+def get_admin_data(id_admin):
     con = db.connectdb()
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM admin")
-    myadmin = cursor.fetchall()
-    admin_array = []
-    admin_one = [column[0] for column in cursor.description]
-    for admin in myadmin:
-        admin_array.append(dict(zip(admin_one, admin)))
-
-    cursor.close()
-    return admin_array
+    cursor.execute("SELECT * FROM admin WHERE idadmin = %s", (id_admin,))
+    data_admin = cursor.fetchone()
+    
+    if data_admin:
+        data = {'idadmin': data_admin[0], 'name': data_admin[1], 'email': data_admin[2], 'password': data_admin[3]}
+        con.close()
+        print(data)
+        return jsonify(data)
+    else:
+        return 'The admin was not found' 
