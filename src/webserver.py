@@ -77,16 +77,23 @@ def create_app(database):
         return login_user(data,key)
     
     #router that check the admin email and password 
-    @app.route("/admin/add", methods=["POST"])
+    @app.route("/admin", methods=["POST"])
     def adm_login():
         key = secret_key()
         data = request.get_json()
-        return login_admin(data, key)
+        return admin_login_data(data, key)
+
+    # route that returns admin register data
+    @app.route("/admin/register", methods=["POST"])
+    def register_admin():
+        key = secret_key()
+        data = request.get_json()
+        return add_register_admin(data, key)
 
     #route that returns admin data
-    @app.route("/admin", methods=["GET"])
-    def admin_login():
-        return get_admin_data()
+    @app.route("/admin/<int:idadmin>", methods=["GET"])
+    def admin_login(idadmin):
+        return get_admin_data(idadmin)
     
     #route that returns all users
     @app.route("/users")
