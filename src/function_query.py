@@ -11,7 +11,6 @@ from src.cloudinary_credentials import cloud_name, api_key, api_secret
 database_path = ""
 
 
-
 # function to connect to the database
 
 def init_db(database):
@@ -89,16 +88,13 @@ def get_one_product(id_product):
 def create_product(data):
     con = db.connectdb()
     cursor = con.cursor()
-    data = request.get_json()
     files= data["files"]
     print("esto es files", data["files"])
     name = data["name"]
     description = data["description"]
     price = data["price"]
-    userid = data["userid"]
     iduser = data["iduser"]
     category = data["category"]
-    cursor.execute('INSERT INTO product (files, name, description, price, category, userid) VALUES (%s, %s, %s, %s, %s, %s)', (files, name, description, price, category, userid,))
 
     # Subir las imágenes a Cloudinary
     uploaded_images = []
@@ -111,10 +107,6 @@ def create_product(data):
     cursor.execute('INSERT INTO product (files, name, description, price, category, iduser) VALUES (%s, %s, %s, %s, %s, %s)', (uploaded_images_json, name, description, price, category, iduser,))
     con.commit()
     con.close()
-
-    print('product added successfully')
-    
-    return "Product created successfully"
     
 # function to change a product
 def change_product(id_product, data):
