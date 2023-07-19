@@ -56,6 +56,7 @@ def get_category(category):
         categorys_array.append(dict(zip(categorys_col_Names, categorys)))
     cursor.close()
     return categorys_array
+
 # function to get all the users that are in the database for the administrator
 def get_users_data():
     con = db.connectdb()
@@ -68,6 +69,7 @@ def get_users_data():
         user_array.append(dict(zip(user_col_Names, user)))
     cursor.close()
     return user_array
+
 #funtion to get one product
 def get_one_product(id_product):
     con = db.connectdb()
@@ -120,8 +122,11 @@ def change_product(id_product, data):
     cursor = con.cursor()
     
     if "files" in data:
-        files= data["files"]
-        cursor.execute('UPDATE product SET files= %s WHERE idproduct = %s', (files, id_product))
+        files = data["files"]
+        upload_result = cloudinary.uploader.upload(files)
+        image_url = upload_result['secure_url']  
+        cursor.execute('UPDATE product SET files = %s WHERE idproduct = %s', (image_url, id_product))
+
     if "name" in data:
         name = data["name"]
         cursor.execute('UPDATE product SET name = %s WHERE idproduct = %s', (name, id_product))
