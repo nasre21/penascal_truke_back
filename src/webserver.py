@@ -7,6 +7,7 @@ from src.manager_user import *
 from src.jwt import *
 
 
+
 def create_app(database):
     
     app = Flask(__name__)
@@ -55,10 +56,9 @@ def create_app(database):
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
-    @app.route("/createproduct", methods=["POST"])
+    @app.route("/createproduct",methods=["POST"])
     def createproduct():
         data = request.get_json()
-        print("esto es data de producto", data)
         return create_product(data)
     
     #route that returns the data which is include in the form register
@@ -76,11 +76,16 @@ def create_app(database):
         return login_user(data,key)
     
     #router that check the admin email and password 
-    @app.route("/admin", methods=["POST"])
+    @app.route("/admin/add", methods=["POST"])
     def adm_login():
         key = secret_key()
         data = request.get_json()
         return login_admin(data, key)
+
+    #route that returns admin data
+    @app.route("/admin", methods=["GET"])
+    def admin_login():
+        return get_admin_data()
     
     #route that returns all users
     @app.route("/users")
@@ -109,7 +114,11 @@ def create_app(database):
     def join_user(idseller):
         return join_data_seller(idseller)
     
-  
+
+    # routes for GET buy
+    @app.route("/users/buy", methods=["GET"])
+    def buy():
+        return data_buy()
     
         
 

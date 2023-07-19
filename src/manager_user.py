@@ -2,6 +2,7 @@ import src.database as db
 from flask import request, jsonify, session
 import jwt
 
+
 database_path = ""
 
 # function to connect to the database
@@ -228,3 +229,16 @@ def join_data_seller(idseller):
     else:
         return None
 
+# get admin data
+def get_admin_data():
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM admin")
+    myadmin = cursor.fetchall()
+    admin_array = []
+    admin_one = [column[0] for column in cursor.description]
+    for admin in myadmin:
+        admin_array.append(dict(zip(admin_one, admin)))
+
+    cursor.close()
+    return admin_array
