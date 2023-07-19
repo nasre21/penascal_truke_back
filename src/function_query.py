@@ -25,6 +25,7 @@ cloudinary.config(
 
 # function to get all the products from the database, returns them in an array
 
+
 def get_products():
     con = db.connectdb()
     cursor = con.cursor()
