@@ -50,6 +50,7 @@ def get_category(category):
     return categorys_array
 
 
+
 # function to get all the users that are in the database for the administrator
 def get_users_data():
     con = db.connectdb()
@@ -179,3 +180,17 @@ def join_product_user(product_id):
     else:
         return None
 
+
+
+def data_buy():
+    con = db.connectdb()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM buy")
+    buyer_data = cursor.fetchall()
+    buyer_array = []
+    buyer_col = [column[0] for column in cursor.description]
+    for each_buy in buyer_data:
+        buyer_array.append(dict(zip(buyer_col, each_buy)))
+
+    cursor.close()
+    return buyer_array

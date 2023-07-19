@@ -6,3 +6,4 @@ __pycache__
 
 src/database.py
 src/jwt.py
+src/cloudinary_credentials.py
