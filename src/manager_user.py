@@ -78,31 +78,38 @@ def change_data_user(id_user, data):
     
     if "lastname" in data:
         lastname = data["lastname"]
-        cursor.execute('UPDATE user SET lastname = %s WHERE iduser = %s', (lastname, id_user))
+        if lastname:
+            cursor.execute('UPDATE user SET lastname = %s WHERE iduser = %s', (lastname, id_user))
 
     if "firstname" in data:
         firstname = data["firstname"]
-        cursor.execute('UPDATE user SET firstname = %s WHERE iduser = %s', (firstname, id_user))
+        if firstname:
+            cursor.execute('UPDATE user SET firstname = %s WHERE iduser = %s', (firstname, id_user))
 
     if "penascales" in data:
         penascales = data["penascales"]
-        cursor.execute('UPDATE user SET penascales = %s WHERE iduser = %s', (penascales, id_user))
+        if penascales:
+            cursor.execute('UPDATE user SET penascales = %s WHERE iduser = %s', (penascales, id_user))
 
     if "phone" in data:
         phone = data["phone"]
-        cursor.execute('UPDATE user SET phone = %s WHERE iduser = %s', (phone, id_user))
+        if phone:
+            cursor.execute('UPDATE user SET phone = %s WHERE iduser = %s', (phone, id_user))
 
     if "sector" in data:
         sector = data["sector"]
-        cursor.execute('UPDATE user SET sector = %s WHERE iduser = %s', (sector, id_user)) 
+        if sector:
+            cursor.execute('UPDATE user SET sector = %s WHERE iduser = %s', (sector, id_user)) 
 
     if "email" in data:
         email = data["email"]
-        cursor.execute('UPDATE user SET email = %s WHERE iduser = %s', (email, id_user))
+        if email:
+            cursor.execute('UPDATE user SET email = %s WHERE iduser = %s', (email, id_user))
     
     if "password" in data:
         password = data["password"]
-        cursor.execute('UPDATE user SET password = %s WHERE iduser = %s', (password, id_user))   
+        if password:
+            cursor.execute('UPDATE user SET password = %s WHERE iduser = %s', (password, id_user))   
               
     con.commit()
     con.close()

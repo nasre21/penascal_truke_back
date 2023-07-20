@@ -115,27 +115,38 @@ def change_product(id_product, data):
     cursor = con.cursor()
     
     if "files" in data:
-        files = data["files"]
-        upload_result = cloudinary.uploader.upload(files)
-        image_url = upload_result['secure_url']  
-        cursor.execute('UPDATE product SET files = %s WHERE idproduct = %s', (image_url, id_product))
+        file = data["files"]
+        if file:
+            upload_result = cloudinary.uploader.upload(file)  
+            image_url = upload_result['secure_url']  
+            cursor.execute('UPDATE product SET files = %s WHERE idproduct = %s', (image_url, id_product))
+
 
     if "name" in data:
         name = data["name"]
-        cursor.execute('UPDATE product SET name = %s WHERE idproduct = %s', (name, id_product))
+        if name:
+            cursor.execute('UPDATE product SET name = %s WHERE idproduct = %s', (name, id_product))
+
     if "description" in data:
         description = data["description"]
-        cursor.execute('UPDATE product SET description = %s WHERE idproduct = %s', (description, id_product))
+        if description:
+            cursor.execute('UPDATE product SET description = %s WHERE idproduct = %s', (description, id_product))
+    
     if "price" in data:
         price = data["price"]
-        cursor.execute('UPDATE product SET price = %s WHERE idproduct = %s', (price, id_product))
+        if price:
+            cursor.execute('UPDATE product SET price = %s WHERE idproduct = %s', (price, id_product))
+    
     if "category" in data:
         category = data["category"]
-        cursor.execute('UPDATE product SET category = %s WHERE idproduct = %s', (category, id_product)) 
+        if category:
+            cursor.execute('UPDATE product SET category = %s WHERE idproduct = %s', (category, id_product)) 
               
     con.commit()
     con.close()
+    
     return 'Dates modified'
+
 # function to delete a product
 def delete_data_product(idproduct):
     con = db.connectdb()
