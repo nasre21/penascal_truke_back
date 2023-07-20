@@ -42,10 +42,22 @@ def create_app(database):
    
     #route that changes the data of a product
     
-    @app.route("/product/upadate/<int:idproduct>", methods=["PATCH"])
+    @app.route("/product/update/<int:idproduct>", methods=["PATCH"])
     def update_product(idproduct):
         data = request.get_json()
-        return change_product(idproduct, data)
+        result = change_product(idproduct, data)
+
+        if result:
+            response = jsonify({'message': 'Product updated successfully.'})
+        else:
+            response = jsonify({'message': 'Failed to update product.'}), 500
+
+        # Configurar cabeceras CORS para permitir todas las solicitudes desde cualquier origen
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Methods', 'PATCH')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+
+        return response
     
     # route join product with user
     @app.route("/product/user/<int:product_id>", methods=["GET"])
