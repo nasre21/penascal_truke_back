@@ -48,7 +48,7 @@ def create_app(database):
         return change_product(idproduct, data)
     
     # route join product with user
-    @app.route("/product/user/<product_id>", methods=["GET"])
+    @app.route("/product/user/<int:product_id>", methods=["GET"])
     def join_product(product_id):
         return join_product_user(product_id)
     
@@ -58,8 +58,9 @@ def create_app(database):
         return delete_data_product(idproduct)
     
     # route that returns all products in a category
-    @app.route("/category/<category>")
+    @app.route("/category/<string:category>")
     def categories(category):
+        print("esto es categoría", category)
         return get_category(category)
     
     #route that returns the data which is include in the form card product 
