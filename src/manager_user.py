@@ -142,6 +142,7 @@ def login_user(data, key):
     if result is not None:
         user_email_db = result[6]
         user_password_db = result[7]
+        id_user = result[0]
         print(user_password_db)
         print(user_email_db)
         
@@ -152,7 +153,7 @@ def login_user(data, key):
             #session['user_email_db'] = user_email
             con.commit()
             con.close()
-            return 'Login successful'  # Return a response indicating success
+            return {'Login successful': int(id_user)}  # Return a response indicating success
         else:
             con.commit()
             con.close()
@@ -163,8 +164,7 @@ def login_user(data, key):
         con.close()
         return 'User not found'  # Return a response for the case when the user is not found in the database
         
-    
-    
+
 # register a new admin
 def add_register_admin(data, key):
     con = db.connectdb()
