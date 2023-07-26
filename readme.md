@@ -1,3 +1,7 @@
+# Open Project
+
+python app.py 
+
 # crearte virtual 
 
 python3 -m venv .venv
