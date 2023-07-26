@@ -31,7 +31,7 @@ def create_app(database):
         return 'Hello World!'
     
     # route that returns all products    
-    @app.route("/product")
+    @app.route("/product",methods=["GET"] )
     def product():
        return get_products()
       
